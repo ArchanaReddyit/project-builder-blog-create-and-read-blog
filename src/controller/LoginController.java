@@ -13,9 +13,6 @@ import businesslogic.ValidateUser;
 import dao.UserDAO;
 import model.User;
 
-
-
-
 @WebServlet(urlPatterns= {"/login"})
 public class LoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -41,15 +38,22 @@ public class LoginController extends HttpServlet {
 		user.setPassword(password);
 		UserDAO userdao = new UserDAO();
 		
-		boolean validateUser = userdao.loginUser(user);
-		if(validateUser) {
-			RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/blogView.jsp");
-			rd.forward(request, response);
-		}else
-		{
-			RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/loginView.jsp");
-			rd.forward(request, response);
-		}	
+		boolean validateUser;
+		try {
+			validateUser = userdao.loginUser(user);
+			if(validateUser) {
+				RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/blogView.jsp");
+				rd.forward(request, response);
+			}else
+			{
+				RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/loginView.jsp");
+				rd.forward(request, response);
+			}	
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

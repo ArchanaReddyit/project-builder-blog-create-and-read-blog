@@ -10,15 +10,17 @@ import utility.ConnectionManager;
 
 public class UserDAO implements UserDaoInterface {
 
-	public int signUp(User user) {
+	public int signUp(User user) throws ClassNotFoundException {
 		String INSERT_USERS_SQL = "INSERT INTO USERS(email, password)VALUES(?,?)";
 
 		int result = 0;
 		try
 		{
-			Connection connection = ConnectionManager.getConnection();
+			 Connection con=null;
+			   con=ConnectionManager.getConnection();
+			
 			// Step 2:Create a statement using connection object
-			PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL);
+			PreparedStatement preparedStatement = con.prepareStatement(INSERT_USERS_SQL);
 			preparedStatement.setString(1,user.getEmail());
 			preparedStatement.setString(2,user.getPassword());
 			System.out.println(preparedStatement);
@@ -30,26 +32,29 @@ public class UserDAO implements UserDaoInterface {
 		return result;
 	}
 	
-	public boolean loginUser(User user) {
-		boolean status = false;
-		try{
-			Connection connection = ConnectionManager.getConnection();
+	public boolean loginUser(User user) throws ClassNotFoundException {
 		
-				// Step 2:Create a statement using connection object
-		PreparedStatement preparedStatement = connection.prepareStatement("select * from users where email = ? and password = ? ");
+		try{
+			 Connection con=null;
+			   con=ConnectionManager.getConnection();
+		PreparedStatement preparedStatement = con.prepareStatement("select * from users where email = ? and password = ? ");
 		
 			preparedStatement.setString(1, user.getEmail());
 			preparedStatement.setString(2, user.getPassword());
-
+            System.out.println(user.getEmail());
+            System.out.println(user.getPassword());
+            
 			System.out.println(preparedStatement);
 			ResultSet rs = preparedStatement.executeQuery();
-			status = rs.next();
-
+			 System.out.println(rs.next());
+			//status = rs.next();
+              // System.out.println(status);
+			 return true;
 		} catch (SQLException e) {
 			// process sql exception
 			System.out.println(e);
 		}
-		return status;
+		return false;
 	}
 
 }
